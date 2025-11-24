@@ -4,7 +4,7 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "start": "set DEBUG=es5-proxy & node server.js",
+    "start": "node server.js",
     "dev": "set DEBUG=es5-proxy & nodemon server.js",
     "test": "echo \"Error: no test specified\" && exit 1",
     "prepare": "husky"
