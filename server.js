@@ -68,10 +68,15 @@ const ALLOWED_HOSTS = [
 
 // Babel configuration to transpile scripts to ES5 (IE11 compatibility)
 const BABEL_OPTIONS = {
-  presets: [["@babel/preset-env", { targets: { ie: "11" } }]],
-  sourceType: "script",
-  compact: true,
+  presets: [
+    [
+      "@babel/preset-env",
+      { targets: { chrome: "60" }, useBuiltIns: false, bugfixes: true },
+    ],
+  ],
+  sourceType: "unambiguous",
   comments: false,
+  compact: false,
 };
 
 // Validates that the URL is syntactically correct and belongs to an allowed host
@@ -95,7 +100,7 @@ app.get("/", (req, res) => {
 // 3. Falls back to disk cache
 // 4. On miss, fetches, transpiles, stores in both caches, and returns result
 app.get("/proxy-es5", async (req, res, next) => {
-  const url = req.query.url;
+  const { url } = req.query;
 
   if (!url || !isAllowedUrl(url)) {
     return res.status(400).send("Invalid or disallowed script URL.");
