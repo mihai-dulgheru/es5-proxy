@@ -70,6 +70,8 @@ const ALLOWED_HOSTS = [
 const BABEL_OPTIONS = {
   presets: [["@babel/preset-env", { targets: { ie: "11" } }]],
   sourceType: "script",
+  compact: true,
+  comments: false,
 };
 
 // Validates that the URL is syntactically correct and belongs to an allowed host
@@ -135,7 +137,10 @@ app.get("/proxy-es5", async (req, res, next) => {
       timeout: 10_000,
     });
 
-    const transpiled = await babel.transformAsync(data, BABEL_OPTIONS);
+    const transpiled = await babel.transformAsync(data, {
+      ...BABEL_OPTIONS,
+      filename: path.basename(url),
+    });
 
     // Persist to disk and memory
     fs.writeFileSync(cacheFile, transpiled.code);
