@@ -6,6 +6,8 @@ const fs = require("fs");
 const path = require("path");
 const cors = require("cors");
 const { LRUCache } = require("lru-cache");
+const logger = require("morgan");
+const debug = require("debug")("es5-proxy");
 
 const app = express();
 
@@ -13,6 +15,7 @@ const allowedOrigins = (process.env.CORS_ORIGIN || "")
   .split(",")
   .map((o) => o.trim());
 
+app.use(logger("dev"));
 app.use(
   cors({
     origin: (origin, callback) => {
@@ -97,12 +100,23 @@ app.get("/proxy-es5", async (req, res) => {
     res.setHeader("Cache-Control", "public, max-age=31536000, immutable");
     res.send(transpiled.code);
   } catch (err) {
-    console.error("Transpile error:", err.message);
+    debug("Transpile error:", err.message);
     res.status(500).send("Failed to fetch or transpile script.");
+  }
+});
+
+// Catch 404 and respond without throwing an error
+app.use(function (req, res) {
+  res.status(404);
+
+  if (req.accepts("json")) {
+    res.json({ error: "Not Found" });
+  } else {
+    res.type("txt").send("Not Found");
   }
 });
 
 const PORT = process.env.PORT || 4000;
 app.listen(PORT, () => {
-  console.log(`ES5 Proxy Server running at http://localhost:${PORT}`);
+  debug(`ES5 Proxy Server running at http://localhost:${PORT}`);
 });

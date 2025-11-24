@@ -4,8 +4,8 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "start": "node server.js",
-    "dev": "nodemon server.js",
+    "start": "set DEBUG=es5-proxy & node server.js",
+    "dev": "set DEBUG=es5-proxy & nodemon server.js",
     "test": "echo \"Error: no test specified\" && exit 1",
     "prepare": "husky"
   },
@@ -18,9 +18,11 @@
     "@babel/preset-env": "^7.28.5",
     "axios": "^1.13.2",
     "cors": "^2.8.5",
+    "debug": "^4.4.3",
     "dotenv": "^17.2.3",
     "express": "^5.1.0",
-    "lru-cache": "^11.2.2"
+    "lru-cache": "^11.2.2",
+    "morgan": "^1.10.1"
   },
   "devDependencies": {
     "@eslint/js": "^9.39.1",
