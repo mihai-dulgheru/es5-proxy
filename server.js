@@ -9,19 +9,8 @@ const express = require("express");
 const fs = require("fs");
 const logger = require("morgan");
 const path = require("path");
-const rateLimit = require("express-rate-limit");
 
 const app = express();
-
-// Rate limiting to prevent abuse (2400 requests per 1 minute per IP)
-const limiter = rateLimit({
-  windowMs: 60 * 1000, // 1 minute
-  max: 2400, // limit each IP to 2400 requests per windowMs
-  standardHeaders: true,
-  legacyHeaders: false,
-});
-
-app.use(limiter);
 
 // HTTP request logger (dev-friendly format)
 app.use(logger("dev"));
