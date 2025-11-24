@@ -1,16 +1,27 @@
 require("dotenv").config({ quiet: true });
 
-const express = require("express");
+const { LRUCache } = require("lru-cache");
 const axios = require("axios");
 const babel = require("@babel/core");
-const fs = require("fs");
-const path = require("path");
 const cors = require("cors");
-const { LRUCache } = require("lru-cache");
-const logger = require("morgan");
 const debug = require("debug")("es5-proxy");
+const express = require("express");
+const fs = require("fs");
+const logger = require("morgan");
+const path = require("path");
+const rateLimit = require("express-rate-limit");
 
 const app = express();
+
+// Rate limiting to prevent abuse (2400 requests per 1 minute per IP)
+const limiter = rateLimit({
+  windowMs: 60 * 1000, // 1 minute
+  max: 2400, // limit each IP to 2400 requests per windowMs
+  standardHeaders: true,
+  legacyHeaders: false,
+});
+
+app.use(limiter);
 
 // HTTP request logger (dev-friendly format)
 app.use(logger("dev"));
@@ -85,11 +96,6 @@ function isAllowedUrl(urlString) {
 // Simple health check endpoint
 app.get("/", (req, res) => {
   res.send("OK");
-});
-
-// Ignore favicon requests cleanly
-app.get("/favicon.ico", (req, res) => {
-  res.status(204).end();
 });
 
 // Main ES5 proxy endpoint:
