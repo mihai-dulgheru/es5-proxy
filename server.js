@@ -55,6 +55,12 @@ function isAllowedUrl(urlString) {
   }
 }
 
+// Health check endpoint
+app.get("/", (req, res) => {
+  res.send("OK");
+});
+
+// Proxy and transpile endpoint
 app.get("/proxy-es5", async (req, res) => {
   const url = req.query.url;
   if (!url || !isAllowedUrl(url)) {
