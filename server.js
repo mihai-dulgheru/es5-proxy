@@ -71,7 +71,7 @@ const BABEL_OPTIONS = {
   presets: [
     [
       "@babel/preset-env",
-      { targets: { chrome: "60" }, useBuiltIns: false, bugfixes: true },
+      { targets: { chrome: "79" }, useBuiltIns: false, bugfixes: true },
     ],
   ],
   sourceType: "unambiguous",
